@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -26,6 +27,22 @@ class User
     private ?string    $lastName  = null;
     #[ORM\Column(length: 255, unique: true)]
     private ?string    $matricule = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $password = null;
+
+    #[ORM\Column]
+    private ?array $roles = [''];
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $active = null;
+
 
     public function __construct()
     {
@@ -100,4 +117,71 @@ class User
 
         return $this;
     }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+        /* * Get the value of roles
+        */
+        public function getRoles(): array
+        {
+            return $this->roles;
+        }
+    
+        /**
+         * Set the value of roles.
+         *
+         * @return self
+         */
+        public function setRoles(array $role)
+        {
+            $this->roles = $role;
+    
+            return $this;
+        }
+
+        public function getActive(): ?int
+        {
+            return $this->active;
+        }
+
+        public function setActive(?int $active): static
+        {
+            $this->active = $active;
+
+            return $this;
+        }
 }

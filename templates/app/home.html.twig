@@ -5,12 +5,11 @@
 		class="col-md-6">
 		{# {{ readmeContent|markdown_to_html }} #}
 {#  Mets les boutons pour selectionner les actions sous forme de tableau? btn à gauche et explication fxnnalité à a droite 
+#}
 
+ <a href=""  class="btn btn-primary">Connectez vous</a>
 
-		<a class="nav-link" href="{{ path('app_Clocking_list') }}">Pointages</a>
-
-
-		<a class="nav-link" href="{{ path('app_Project_list') }}">Chantiers</a>
-
-		<a class="nav-link" href="{{ path('app_User_list') }}">Collaborateurs</div> #}
+  <p>Vous avez pas de compte collaborateur inscrivez vous
+  <a href=""  class="btn btn-success">Créez un compte</a>
+  </p>
 	{% endblock %}

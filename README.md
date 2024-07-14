@@ -16,9 +16,13 @@ symfony serve
 
 <!-- Premiere idée
 
-pour saisir les informations du collaborateur une seule fois avant de passer au pointage je pense que un systeme d'authentification et connexion va permettre d'enregostrer ses infos une seule fois
-=> donc je rajoute les infos pour rendre cela possible à la table user 
-=>aussi role pour la deuxieme partie de l'exercice
+1) pour saisir les informations du collaborateur une seule fois avant de passer au pointage je pense que un systeme d'authentification et connexion va permettre d'enregostrer ses infos une seule fois
+
+=> donc je rajoute les infos pour rendre cela possible à la table user(mail, password, token ,active role)
+=>make:migration et migrations:migrate
+
+=>fomulaire d'inscription , security controller et authentification
+
 
 Ensuite changer la relation entre la table chantier et pointage en ManyToMany 
 pour selectionner plusieurs chantiers et plusieurs durées . Pour cela c'est mieux avoir la durée dans la table intermediaire plutot que dans pointage
