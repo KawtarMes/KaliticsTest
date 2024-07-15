@@ -5,69 +5,120 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 
-
-#[Route('/security')]
 class SecurityController extends AbstractController
 {
-    // #[Route('/', name: 'app_security')]
-    // public function index(): Response
-    // {
-    //     return $this->render('security/index.html.twig', [
-    //         'controller_name' => 'SecurityController',
-    //     ]);
-    // }
 
-    //inscription : création d'un user
+    //inscription , création d'user
     #[Route('/signup', name: 'sign_up')]
-    public function signup(EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $hasher)
+    public function signup(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer): Response
     {
-        //créer une instance de User
-        $user = new User;
-        //créer le form avec le RegistrationType 
-        $form = $this->createForm(RegistrationType::class);
-        //gerer la requete
-        $form->handleRequest(($request));
-        //verifier le form  
+        //nouvelle instance de user
+        $user = new User();
+        //creation du form à l'aide du registration type
+        $form = $this->createForm(RegistrationType::class, $user);
+        //gerer le form
+        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            //hydrater l'obj User avec les saisies recuperées
-            $user = $form->getData();
-            //hasher le mot de passe
-            $user->setPassword($hasher->hashPassword($user, $form->get('password')->getData()));
+            //hachage de mot de passe
+            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+            $user->setPassword($hashedPassword);
 
-            //set active a 0 jusqua verification
+            //par default le user il est pas active et role user
             $user->setActive(0);
+            $user->setRoles(['ROLE_USER']);
+
+            //generer le token 
+            $token = $this->generateToken();
+            $user->setToken($token);
+
+            //prepare and execute en bdd
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            //envoyer le mail de validation 
+            $this->sendConfirmationEmail($user, $mailer);
+
+            //message  flash
+            $this->addFlash('success', 'Vous venez de vous inscrire! Verifiez votre email pour confirmer l\'inscription.');
+            //redirection à la page de connexion
+            return $this->redirectToRoute('login');
         }
-
-        //generer un token
-        $token = $this->generateToken();
-        //attribuer le token
-        $user->setToken($token);
-        //prepare and execute
-        $manager->persist($user);
-        $manager->flush();
-        //message flash
-
-        //mail de validation
-        //redirection à la page de connexion
-
-
-        return $this->render('/security/signup.html.twig', ['form' => $form->createView()]);
+        return $this->render('security/signup.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
-    //Fonction pour générer des Tokens
+    //email de validation
+    private function sendConfirmationEmail(User $user, MailerInterface $mailer)
+    {
+        $email = (new TemplatedEmail())
+            ->from(new Address('kawtarthebest@gmail.com', 'Your App'))
+            ->to($user->getEmail())
+            ->subject('Please Confirm your Email')
+            ->htmlTemplate('emails/confirmation.html.twig')
+            ->context([
+                'user' => $user,
+                'token' => $user->getToken(),
+            ]);
+
+        $mailer->send($email);
+    }
+
     private function generateToken()
     {
-        // rtrim supprime les espaces en fin de chaine de caractère
-        // strtr remplace des occurences dans une chaine ici +/ et -_ (caractères récurent dans l'encodage en base64) par des = pour générer des url valides
-        // ce token sera utilisé dans les envoie de mail pour l'activation du compte ou la récupération de mot de passe
         return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+    }
+    //confirmer via le token
+    #[Route('/confirm/{token}', name: 'confirm_email')]
+    public function confirmEmail($token, EntityManagerInterface $entityManager): Response
+    {
+        //recuperer le user avec le token correspondant
+        $user = $entityManager->getRepository(User::class)->findOneBy(['token' => $token]);
+        // si on le trouve
+        if ($user) {
+            //on active et reset le token a null
+            $user->setActive(1);
+            $user->setToken(null);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre compte a bien été crée, connectez vous');
+            //redirection pour se connecter
+            return $this->redirectToRoute('login');
+        }
+        //sinon erreur et renvoyer pour tenter a nouveau l'inscription
+        $this->addFlash('error', 'Invalid token.');
+        return $this->redirectToRoute('sign_up');
+    }
+    //Connection Login
+    #[Route('/login', name: 'login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+    }
+
+    #[Route('/logout', name: 'logout')]
+    public function logout(): void
+    {
+        // controller can be blank: it will never be executed!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
 }

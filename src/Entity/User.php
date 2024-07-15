@@ -9,10 +9,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+
 {
 
     #[ORM\OneToMany(targetEntity: Clocking::class, mappedBy: 'clockingUser', orphanRemoval: true)]
@@ -184,4 +187,20 @@ class User
 
             return $this;
         }
+        //savoir si active pour l'authentification
+        public function isActive(): ?bool
+        {
+            return $this->active;
+        }
+
+        public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function eraseCredentials():void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
 }
