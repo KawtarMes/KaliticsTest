@@ -190,7 +190,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         //savoir si active pour l'authentification
         public function isActive(): ?bool
         {
-            return $this->active;
+            return $this->active === 1;
+            //true si ===1 ou false si c'est 0
         }
 
         public function getUserIdentifier(): string

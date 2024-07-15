@@ -13,7 +13,7 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        if (!$user->isActive()) {
+        if (!$user->isActive() == true) {
             throw new CustomUserMessageAuthenticationException(
                 'Votre compte n\'est pas actif.'
             );
