@@ -1,15 +1,25 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div
-		class="col-md-6">
+	<div class="col-md-6">
 		{# {{ readmeContent|markdown_to_html }} #}
-{#  Mets les boutons pour selectionner les actions sous forme de tableau? btn à gauche et explication fxnnalité à a droite 
-#}
 
- <a href=""  class="btn btn-primary">Connectez vous</a>
+		{# si on est connectés on pointe  #}
+			{% if app.user %}
+			<p>Pointage</p>
+			<a href="" class="btn btn-success">Je pointe</a>
+	
+			{# faire condition sur le role  #}
 
-  <p>Vous avez pas de compte collaborateur inscrivez vous
-  <a href="{{ path('sign_up') }}"  class="btn btn-success">Créez un compte</a>
-  </p>
+
+			{% else %}
+				<a href="{{ path('login')}}" class="btn btn-primary">Connectez vous</a>
+
+				<p>Vous avez pas de compte collaborateur inscrivez vous
+					<a href="{{ path('sign_up') }}" class="btn btn-success">Créez un compte</a>
+				</p>
+
+		{% endif %}
+
+
 	{% endblock %}

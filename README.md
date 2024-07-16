@@ -23,9 +23,11 @@ symfony serve
 
 =>fomulaire d'inscription , security controller et authentification
 
-
+        =>probleme de mailer , en stand by pour gagner du temps (message concernant ssl)
+        
 Ensuite changer la relation entre la table chantier et pointage en ManyToMany 
 pour selectionner plusieurs chantiers et plusieurs durées . Pour cela c'est mieux avoir la durée dans la table intermediaire plutot que dans pointage
+  => D'apres mes recherche si je veux rajouter à ma table intermediaire un champs je pourrais pas le faire en symfony. Je dois plutot que de changer la relation,créer une nouvelle table Pointage/Chantier et y mettre le champs durée que je voulais, ainsi que le relier aux tables Pointage et chantier . 
 
 
 Pour la deuxieme partie je pense qu'il faudra gerer les roles des collaborateur et permettre au chef du projet de placer les autre collaborateur sur un chantier . Donc un formulaire specifique accessible sous la condition de role_admin -->

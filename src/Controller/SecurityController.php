@@ -62,17 +62,17 @@ class SecurityController extends AbstractController
     //email de validation
     private function sendConfirmationEmail(User $user, MailerInterface $mailer)
     {
-        $email = (new TemplatedEmail())
-            ->from(new Address('kawtarthebest@gmail.com', 'Your App'))
-            ->to($user->getEmail())
-            ->subject('Please Confirm your Email')
-            ->htmlTemplate('emails/confirmation.html.twig')
-            ->context([
-                'user' => $user,
-                'token' => $user->getToken(),
-            ]);
+        // $email = (new TemplatedEmail())
+        //     ->from(new Address('kawtarthebest@gmail.com'))
+        //     ->to($user->getEmail())
+        //     ->subject('Validez votre compte')
+        //     ->htmlTemplate('emails/confirmation.html.twig')
+        //     ->context([
+        //         'user' => $user,
+        //         'token' => $user->getToken(),
+        //     ]);
 
-        $mailer->send($email);
+        // $mailer->send($email);
     }
 
     private function generateToken()
