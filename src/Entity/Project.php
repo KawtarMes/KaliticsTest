@@ -32,9 +32,13 @@ class Project
     #[ORM\Column(length: 255)]
     private ?string            $name      = null;
 
+    #[ORM\OneToMany(targetEntity: ClockingProject::class, mappedBy: 'project')]
+    private Collection $clockingProjects;
+
     public function __construct()
     {
         $this->clockings = new ArrayCollection();
+        $this->clockingProjects = new ArrayCollection();
     }
 
     public function addClocking(Clocking $clocking) : static
@@ -108,6 +112,36 @@ class Project
             // set the owning side to null (unless already changed)
             if($clocking->getClockingProject() === $this) {
                 $clocking->setClockingProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ClockingProject>
+     */
+    public function getClockingProjects(): Collection
+    {
+        return $this->clockingProjects;
+    }
+
+    public function addClockingProject(ClockingProject $clockingProject): static
+    {
+        if (!$this->clockingProjects->contains($clockingProject)) {
+            $this->clockingProjects->add($clockingProject);
+            $clockingProject->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClockingProject(ClockingProject $clockingProject): static
+    {
+        if ($this->clockingProjects->removeElement($clockingProject)) {
+            // set the owning side to null (unless already changed)
+            if ($clockingProject->getProject() === $this) {
+                $clockingProject->setProject(null);
             }
         }
 
