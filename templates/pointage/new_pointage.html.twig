@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>Nouveau Pointage</h1>
+        {{ form_start(form) }}
+        <div>
+            {{ form_label(form.date) }}
+            {{ form_widget(form.date) }}
+        </div>
+        <div>
+            {{ form_label(form.clockingUser) }}
+            {{ form_widget(form.clockingUser) }}
+        </div>
+        <div>
+            <h3>Projets</h3>
+            {{ form_widget(form.clockingProjects) }}
+        </div>
+        <div>
+            {{ form_widget(form.save) }}
+        </div>
+    {{ form_end(form) }}
+    {% endblock %}

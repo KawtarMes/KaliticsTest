@@ -1,0 +1,27 @@
+{% extends 'base.html.twig'  %}
+
+{% block body %}
+ <h1>Liste des Pointages</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Collaborateur</th>
+                <th>Chantier</th>
+                <th>Durée</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pointage in Pointages %}
+                <tr>
+                    <td>{{ pointage.clocking.date|date('Y-m-d') }}</td>
+                    <td>{{ pointage.clocking.clockingUser.firstName }} {{ pointage.clocking.clockingUser.lastName }}</td>
+                    <td>{{ pointage.project.name }}</td>
+                    <td>{{ pointage.duration }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

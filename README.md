@@ -29,5 +29,8 @@ Ensuite changer la relation entre la table chantier et pointage en ManyToMany
 pour selectionner plusieurs chantiers et plusieurs durées . Pour cela c'est mieux avoir la durée dans la table intermediaire plutot que dans pointage
   => D'apres mes recherche si je veux rajouter à ma table intermediaire un champs je pourrais pas le faire en symfony. Je dois plutot que de changer la relation,créer une nouvelle table Pointage/Chantier et y mettre le champs durée que je voulais, ainsi que le relier aux tables Pointage et chantier . 
 
+  J'ai essaye de faire deux form pour le nom et la date , mais de part de la structure on peux pas persisté sans les infos qui manque, quand j'ai mis les deux formulaire sur une page , par contre il n'ya pas d'enregistrement qui se passe au niveau de la bdd .
+  
+
 
 Pour la deuxieme partie je pense qu'il faudra gerer les roles des collaborateur et permettre au chef du projet de placer les autre collaborateur sur un chantier . Donc un formulaire specifique accessible sous la condition de role_admin -->

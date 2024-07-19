@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Ajouter des Chantiers</h1>
+
+        <h2>Pointage du {{ clocking.date|date('d/m/Y') }} pour {{ clocking.clockingUser.firstName }} {{ clocking.clockingUser.lastName }}</h2>
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.project) }}
+                {{ form_widget(form.project, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.duration) }}
+                {{ form_widget(form.duration, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+
+            <button type="submit" class="btn btn-success">Ajouter ce chantier</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('pointage_list') }}" class="btn btn-primary mt-4">Terminer</a>
+    </div>
+{% endblock %}

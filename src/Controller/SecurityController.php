@@ -94,14 +94,14 @@ class SecurityController extends AbstractController
 
             $this->addFlash('success', 'Votre compte a bien été crée, connectez vous');
             //redirection pour se connecter
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
         //sinon erreur et renvoyer pour tenter a nouveau l'inscription
         $this->addFlash('error', 'Invalid token.');
         return $this->redirectToRoute('sign_up');
     }
     //Connection Login
-    #[Route('/login', name: 'login')]
+    #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one

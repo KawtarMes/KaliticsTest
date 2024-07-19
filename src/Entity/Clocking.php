@@ -33,7 +33,7 @@ class Clocking
     #[ORM\Column]
     private ?int               $id              = null;
 
-    #[ORM\OneToMany(targetEntity: ClockingProject::class, mappedBy: 'clocking')]
+    #[ORM\OneToMany(targetEntity: ClockingProject::class, mappedBy: 'clocking', cascade: ['persist'])]
     private Collection $clockingProjects;
 
     public function __construct()

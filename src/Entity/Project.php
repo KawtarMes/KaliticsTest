@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -37,13 +37,13 @@ class Project
 
     public function __construct()
     {
-        $this->clockings = new ArrayCollection();
+        // $this->clockings = new ArrayCollection();
         $this->clockingProjects = new ArrayCollection();
     }
 
-    public function addClocking(Clocking $clocking) : static
+    public function addClocking(Clocking $clocking): static
     {
-        if(!$this->clockings->contains($clocking)) {
+        if (!$this->clockings->contains($clocking)) {
             $this->clockings->add($clocking);
             $clocking->setClockingProject($this);
         }
@@ -51,12 +51,12 @@ class Project
         return $this;
     }
 
-    public function getAddress() : ?string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
 
-    public function setAddress(?string $address) : void
+    public function setAddress(?string $address): void
     {
         $this->address = $address;
     }
@@ -64,53 +64,53 @@ class Project
     /**
      * @return Collection<int, Clocking>
      */
-    public function getClockings() : Collection
+    public function getClockings(): Collection
     {
         return $this->clockings;
     }
 
-    public function getDateEnd() : ?DateTimeInterface
+    public function getDateEnd(): ?DateTimeInterface
     {
         return $this->dateEnd;
     }
 
-    public function setDateEnd(?DateTimeInterface $dateEnd) : void
+    public function setDateEnd(?DateTimeInterface $dateEnd): void
     {
         $this->dateEnd = $dateEnd;
     }
 
-    public function getDateStart() : ?DateTimeInterface
+    public function getDateStart(): ?DateTimeInterface
     {
         return $this->dateStart;
     }
 
-    public function setDateStart(?DateTimeInterface $dateStart) : void
+    public function setDateStart(?DateTimeInterface $dateStart): void
     {
         $this->dateStart = $dateStart;
     }
 
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName() : ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name) : static
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function removeClocking(Clocking $clocking) : static
+    public function removeClocking(Clocking $clocking): static
     {
-        if($this->clockings->removeElement($clocking)) {
+        if ($this->clockings->removeElement($clocking)) {
             // set the owning side to null (unless already changed)
-            if($clocking->getClockingProject() === $this) {
+            if ($clocking->getClockingProject() === $this) {
                 $clocking->setClockingProject(null);
             }
         }
