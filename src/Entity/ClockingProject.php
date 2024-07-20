@@ -13,7 +13,7 @@ class ClockingProject
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'clockingProjects')]
+    #[ORM\ManyToOne(targetEntity: Clocking::class, inversedBy: 'clockingProjects')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Clocking $clocking = null;
 
@@ -34,7 +34,7 @@ class ClockingProject
         return $this->clocking;
     }
 
-    public function setClocking(?Clocking $clocking): static
+    public function setClocking(?Clocking $clocking): self
     {
         $this->clocking = $clocking;
 
@@ -46,7 +46,7 @@ class ClockingProject
         return $this->project;
     }
 
-    public function setProject(?Project $project): static
+    public function setProject(?Project $project): self
     {
         $this->project = $project;
 
@@ -58,7 +58,7 @@ class ClockingProject
         return $this->duration;
     }
 
-    public function setDuration(int $duration): static
+    public function setDuration(int $duration): self
     {
         $this->duration = $duration;
 

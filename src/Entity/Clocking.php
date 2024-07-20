@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ClockingRepository;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,16 +20,12 @@ class Clocking
 
     #[ORM\ManyToOne(inversedBy: 'clockings')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Project $clockingProject = null;
-
-    #[ORM\ManyToOne(inversedBy: 'clockings')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?User $clockingUser = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?DateTimeInterface $date = null;
+    #[ORM\Column(type: 'date')]
+    private ?\DateTimeInterface $date = null;
 
-    #[ORM\OneToMany(targetEntity: ClockingProject::class, mappedBy: 'clocking', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: ClockingProject::class, mappedBy: 'clocking', cascade: ['persist'], orphanRemoval: true)]
     private Collection $clockingProjects;
 
     public function __construct()
@@ -39,16 +33,9 @@ class Clocking
         $this->clockingProjects = new ArrayCollection();
     }
 
-    public function getClockingProject(): ?Project
+    public function getId(): ?int
     {
-        return $this->clockingProject;
-    }
-
-    public function setClockingProject(?Project $clockingProject): static
-    {
-        $this->clockingProject = $clockingProject;
-
-        return $this;
+        return $this->id;
     }
 
     public function getClockingUser(): ?User
@@ -56,47 +43,44 @@ class Clocking
         return $this->clockingUser;
     }
 
-    public function setClockingUser(?User $clockingUser): static
+    public function setClockingUser(?User $clockingUser): self
     {
         $this->clockingUser = $clockingUser;
 
         return $this;
     }
 
-    public function getDate(): ?DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(?DateTimeInterface $date): void
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-    }
 
-    public function getId(): ?int
-    {
-        return $this->id;
+        return $this;
     }
 
     /**
-     * @return Collection<int, ClockingProject>
+     * @return Collection|ClockingProject[]
      */
     public function getClockingProjects(): Collection
     {
         return $this->clockingProjects;
     }
 
-    public function addClockingProject(ClockingProject $clockingProject): static
+    public function addClockingProject(ClockingProject $clockingProject): self
     {
         if (!$this->clockingProjects->contains($clockingProject)) {
-            $this->clockingProjects->add($clockingProject);
+            $this->clockingProjects[] = $clockingProject;
             $clockingProject->setClocking($this);
         }
 
         return $this;
     }
 
-    public function removeClockingProject(ClockingProject $clockingProject): static
+    public function removeClockingProject(ClockingProject $clockingProject): self
     {
         if ($this->clockingProjects->removeElement($clockingProject)) {
             // set the owning side to null (unless already changed)
