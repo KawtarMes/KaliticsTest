@@ -1,51 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<main class="container-fluid">
-		<h1>Nouveau Pointage</h1>
-		{{ form_start(form) }}
-		<h6>Vous êtes connecté en tant que : {{ app.user.firstName }}</h6>
-		<h6>Vous pointé aujourd'hui à la date :	{{"now"|date("Y-m-d")}}</h6>
-		<div>
-			<h3>Projets</h3>
-			{{ form_widget(form.clockingProjects) }}
-		</div>
-		<div>
+<main class="container-fluid">
+    <h1>Nouveau Pointage</h1>
+    {{ form_start(form) }}
+    <h6>Vous êtes connecté en tant que : {{ app.user.firstName }}</h6>
+    <h6>Vous pointé aujourd'hui à la date : {{ "now"|date("Y-m-d") }}</h6>
+    <div>
+        <h3>Projets</h3>
+        <!-- Conteneur des chantier et durées avec l'attribut data-prototype -->
+        <div id="projects-container" data-prototype="{{ form_widget(form.clockingProjects.vars.prototype)|e('html_attr') }}">
+            {{ form_widget(form.clockingProjects) }}
+        </div>
+    </div>
+    <div>
+        <!-- Bouton pour ajouter un nouveau chantier -->
+        <button type="button" id="add-project-btn" class="btn btn-primary">Ajouter un projet</button>
+        {{ form_widget(form.save) }}
+    </div>
+    {{ form_end(form) }}
+</main>
 
-			<button type="button" id="add-project-btn" class="btn btn-primary">Ajouter un projet</button>
+{% block javascript %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // je recupere le bouton pour l'ajout des formulaire et la div qui le contient
+        let addProjectBtn = document.getElementById('add-project-btn');
+        let projectsContainer = document.getElementById('projects-container');
 
-			{{ form_widget(form.save) }}
-		</div>
-	</main>
-
-	{% block javascript %}
-		<script>
-			// je veux pouvoir rajouter plusieur fois le form  clockingptoject de maniere dynamique autant de fois qu on veux
-            document.addEventListener('DOMContentLoaded', function () {
-            let addProjectBtn = document.getElementById('add-project-btn');
-            let projectsContainer = document.getElementById('projects-container');
-
-            addProjectBtn.addEventListener('click', function () {
-            let prototype = projectsContainer.dataset.prototype;
-            let index = projectsContainer.dataset.index;
+        //eventlistener au bouton d'ajout au click
+        addProjectBtn.addEventListener('click', function () {
+            // récupération du prototype de form 
+            let prototype = projectsContainer.getAttribute('data-prototype');
+            // calcul de l'index suivant pour le remplacement du placeholder __name__
+            let index = projectsContainer.children.length;
+            // remplacement du placeholder __name__ par l'index
             let newForm = prototype.replace(/__name__/g, index);
-            projectsContainer.dataset.index = parseInt(index) + 1;
+            // création d'une nouvelle  div pour contenir le form clockinkProjectType
             let newFormElement = document.createElement('div');
             newFormElement.classList.add('project-form');
             newFormElement.innerHTML = newForm;
+            // ajout d'un nouveau form
             projectsContainer.appendChild(newFormElement);
-            });
+        });
 
-            // Set initial data-prototype and index
-            let formPrototype = projectsContainer.getAttribute('data-prototype');
-            if (! projectsContainer.dataset.prototype) {
-            projectsContainer.dataset.prototype = formPrototype;
-            }
-            if (! projectsContainer.dataset.index) {
-            projectsContainer.dataset.index = {{ form.clockingProjects|length }};
-            }
-            });
-                    </script>
-        {% endblock %}
-	{{ form_end(form) }}
+        // initialisation des attributs data-prototype et data-index si non définis
+        if (!projectsContainer.dataset.prototype) {
+            projectsContainer.dataset.prototype = projectsContainer.getAttribute('data-prototype');
+        }
+        if (!projectsContainer.dataset.index) {
+            projectsContainer.dataset.index = projectsContainer.children.length;
+        }
+    });
+</script>
+{% endblock %}
 {% endblock %}
