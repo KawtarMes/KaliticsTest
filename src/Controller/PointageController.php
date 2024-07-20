@@ -60,6 +60,8 @@ class PointageController extends AbstractController
         // Rend la liste des pointages
         return $this->render('pointage/liste_pointages.html.twig', ['Pointages' => $ClockingProjects]);
     }
+
+    
 }
 
 

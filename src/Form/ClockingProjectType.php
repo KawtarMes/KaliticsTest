@@ -23,7 +23,7 @@ class ClockingProjectType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $projects = $this->projectRepository->findAll();
+        $projects = $this->projectRepository->findAll();// pouvoir recuperé  les obj projet pour les selectionner
         $builder
             ->add('project', ChoiceType::class, [
                 'choices' => $projects,

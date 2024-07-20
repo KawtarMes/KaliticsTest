@@ -1,22 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <table>
-        <thead>
-            <tr>
-                <td>{{ 'entity.User.firstName'|trans }}</td>
-                <td>{{ 'entity.User.lastName'|trans }}</td>
-                <td>{{ 'entity.User.matricule'|trans }}</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
+<main class="container mt-5">
+    <h1 class="mb-4">Liste des Utilisateurs</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="table-dark">
                 <tr>
-                    <td>{{ user.firstName }}</td>
-                    <td>{{ user.lastName }}</td>
-                    <td>{{ user.matricule }}</td>
+                    <th>{{ 'entity.User.firstName'|trans }}</th>
+                    <th>{{ 'entity.User.lastName'|trans }}</th>
+                    <th>{{ 'entity.User.matricule'|trans }}</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.firstName }}</td>
+                        <td>{{ user.lastName }}</td>
+                        <td>{{ user.matricule }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
 {% endblock %}

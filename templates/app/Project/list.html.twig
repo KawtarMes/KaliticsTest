@@ -1,24 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <table>
-        <thead>
-            <tr>
-                <td>{{ 'entity.Project.name'|trans }}</td>
-                <td>{{ 'entity.Project.address'|trans }}</td>
-                <td>{{ 'entity.Project.dateStart'|trans }}</td>
-                <td>{{ 'entity.Project.dateEnd'|trans }}</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for project in projects %}
+<main class="container mt-5">
+    <h1 class="mb-4">Liste des Projets</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="table-dark">
                 <tr>
-                    <td>{{ project.name }}</td>
-                    <td>{{ project.address }}</td>
-                    <td>{{ project.dateStart|date }}</td>
-                    <td>{{ project.dateEnd|date }}</td>
+                    <th>{{ 'entity.Project.name'|trans }}</th>
+                    <th>{{ 'entity.Project.address'|trans }}</th>
+                    <th>{{ 'entity.Project.dateStart'|trans }}</th>
+                    <th>{{ 'entity.Project.dateEnd'|trans }}</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ project.name }}</td>
+                        <td>{{ project.address }}</td>
+                        <td>{{ project.dateStart|date('Y-m-d') }}</td>
+                        <td>{{ project.dateEnd|date('Y-m-d') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
 {% endblock %}

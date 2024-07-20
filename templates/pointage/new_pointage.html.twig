@@ -1,50 +1,64 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<main class="container-fluid">
-    <h1>Nouveau Pointage</h1>
+<main class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-6">Nouveau Pointage</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="mb-2">
+                <h6 class="text-muted">Connecté en tant que : <strong>{{ app.user.firstName }}</strong></h6>
+            </div>
+            <div>
+                <h6 class="text-muted">Date de pointage : <strong>{{ "now"|date("Y-m-d") }}</strong></h6>
+            </div>
+        </div>
+    </div>
+
     {{ form_start(form) }}
-    <h6>Vous êtes connecté en tant que : {{ app.user.firstName }}</h6>
-    <h6>Vous pointé aujourd'hui à la date : {{ "now"|date("Y-m-d") }}</h6>
-    <div>
-        <h3>Projets</h3>
-        <!-- Conteneur des chantier et durées avec l'attribut data-prototype -->
+
+    <div class="mb-4">
+        <h3 class="h5">Projets</h3>
+        <!-- Conteneur des chantiers et durées avec l'attribut data-prototype -->
         <div id="projects-container" data-prototype="{{ form_widget(form.clockingProjects.vars.prototype)|e('html_attr') }}">
             {{ form_widget(form.clockingProjects) }}
         </div>
     </div>
-    <div>
+
+    <div class="d-flex justify-content-between">
         <!-- Bouton pour ajouter un nouveau chantier -->
         <button type="button" id="add-project-btn" class="btn btn-primary">Ajouter un projet</button>
-        {{ form_widget(form.save) }}
+        {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-success' } }) }}
     </div>
+
     {{ form_end(form) }}
 </main>
 
 {% block javascript %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // je recupere le bouton pour l'ajout des formulaire et la div qui le contient
+        // Je récupère le bouton pour l'ajout des formulaires et la div qui le contient
         let addProjectBtn = document.getElementById('add-project-btn');
         let projectsContainer = document.getElementById('projects-container');
 
-        //eventlistener au bouton d'ajout au click
+        // Event listener au bouton d'ajout au clic
         addProjectBtn.addEventListener('click', function () {
-            // récupération du prototype de form 
+            // Récupération du prototype de formulaire 
             let prototype = projectsContainer.getAttribute('data-prototype');
-            // calcul de l'index suivant pour le remplacement du placeholder __name__
+            // Calcul de l'index suivant pour le remplacement du placeholder __name__
             let index = projectsContainer.children.length;
-            // remplacement du placeholder __name__ par l'index
+            // Remplacement du placeholder __name__ par l'index
             let newForm = prototype.replace(/__name__/g, index);
-            // création d'une nouvelle  div pour contenir le form clockinkProjectType
+            // Création d'une nouvelle div pour contenir le formulaire clockingProjectType
             let newFormElement = document.createElement('div');
-            newFormElement.classList.add('project-form');
+            newFormElement.classList.add('project-form', 'mb-3', 'p-3', 'border', 'rounded');
             newFormElement.innerHTML = newForm;
-            // ajout d'un nouveau form
+            // Ajout d'un nouveau formulaire
             projectsContainer.appendChild(newFormElement);
         });
 
-        // initialisation des attributs data-prototype et data-index si non définis
+        // Initialisation des attributs data-prototype et data-index si non définis
         if (!projectsContainer.dataset.prototype) {
             projectsContainer.dataset.prototype = projectsContainer.getAttribute('data-prototype');
         }

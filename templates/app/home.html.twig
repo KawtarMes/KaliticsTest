@@ -1,25 +1,32 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div class="col-md-6">
-		{# {{ readmeContent|markdown_to_html }} #}
+<main class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <!-- Si l'utilisateur est connecté, il peut pointer et se déconnecter -->
+            {% if app.user %}
+                <h1 class="mb-4">Bienvenue, {{ app.user.firstName }} !</h1>
+                <p class="mb-4">Cliquez sur le bouton ci-dessous pour enregistrer votre pointage.</p>
+                <a href="{{ path('clocking_new') }}" class="btn btn-success btn-lg">Je pointe</a>
 
-		{# si on est connectés on pointe  #}
-			{% if app.user %}
-			<p>Pointage</p>
-			<a href="{{ path('clocking_new')}}" class="btn btn-success">Je pointe</a>
-	
-			{# faire condition sur le role  #}
-
-
-			{% else %}
-				<a href="{{ path('app_login')}}" class="btn btn-primary">Connectez vous</a>
-
-				<p>Vous avez pas de compte collaborateur inscrivez vous
-					<a href="{{ path('sign_up') }}" class="btn btn-success">Créez un compte</a>
-				</p>
-
-		{% endif %}
-
-
-	{% endblock %}
+                <!-- Formulaire de déconnexion -->
+                <div class="mt-4">
+                    <form method="post" action="{{ path('logout') }}" style="display: inline;">
+                        <button type="submit" class="btn btn-lg">Se déconnecter</button>
+                    </form>
+                </div>
+                
+            {% else %}
+                <h1 class="mb-4">Bienvenue sur notre application de pointage</h1>
+                <p class="mb-4">Connectez-vous ou inscrivez-vous pour commencer.</p>
+                <div>
+                    <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg mb-2">Connectez-vous</a>
+                </div>
+                <p class="mb-4">Vous n'avez pas de compte collaborateur ?</p>
+                <a href="{{ path('sign_up') }}" class="btn btn-success btn-lg">Créez un compte</a>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}
