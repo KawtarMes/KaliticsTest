@@ -21,38 +21,20 @@ class ClockingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('date', DateType::class, [
-            'widget' => 'single_text',
-            'label' => 'Date',
-        ])
-        ->add('clockingUser', EntityType::class, [
-            'class' => 'App\Entity\User',
-            'choice_label' => 'firstName',
-            'label' => 'Utilisateur',
-        ])
-        ->add('clockingProjects', CollectionType::class, [
-            'entry_type' => ClockingProjectType::class,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'label' => 'Projets',
-            'entry_options' => ['label' => false],
-        ])
-        ->add('save', SubmitType::class, ['label' => 'Enregistrer']);
-   
-        
-            // ->add('date')
-            // ->add('duration')
-            // ->add('clockingProject', EntityType::class, [
-            //     'class' => Project::class,
-            //     'choice_label' => 'id',
-            // ])
-            // ->add('clockingUser', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            // ])
-            ;
-              
+                ->add('clockingProjects', CollectionType::class, [
+                    'entry_type' => ClockingProjectType::class,
+                    'entry_options' => ['label' => false],
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                    //pour le js
+                    'prototype' => true,
+                    'prototype_name' => '__name__',
+                    'attr' => [
+                        'data-prototype' => '{{ form_widget(form.clockingProjects.vars.prototype)|e }}',
+                    ],
+                ])
+            ->add('save', SubmitType::class, ['label' => 'Enregistrer']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

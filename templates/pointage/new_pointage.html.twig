@@ -1,23 +1,51 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+	<main class="container-fluid">
+		<h1>Nouveau Pointage</h1>
+		{{ form_start(form) }}
+		<h6>Vous êtes connecté en tant que : {{ app.user.firstName }}</h6>
+		<h6>Vous pointé aujourd'hui à la date :	{{"now"|date("Y-m-d")}}</h6>
+		<div>
+			<h3>Projets</h3>
+			{{ form_widget(form.clockingProjects) }}
+		</div>
+		<div>
 
-    <h1>Nouveau Pointage</h1>
-        {{ form_start(form) }}
-        <div>
-            {{ form_label(form.date) }}
-            {{ form_widget(form.date) }}
-        </div>
-        <div>
-            {{ form_label(form.clockingUser) }}
-            {{ form_widget(form.clockingUser) }}
-        </div>
-        <div>
-            <h3>Projets</h3>
-            {{ form_widget(form.clockingProjects) }}
-        </div>
-        <div>
-            {{ form_widget(form.save) }}
-        </div>
-    {{ form_end(form) }}
-    {% endblock %}
+			<button type="button" id="add-project-btn" class="btn btn-primary">Ajouter un projet</button>
+
+			{{ form_widget(form.save) }}
+		</div>
+	</main>
+
+	{% block javascript %}
+		<script>
+			// je veux pouvoir rajouter plusieur fois le form  clockingptoject de maniere dynamique autant de fois qu on veux
+            document.addEventListener('DOMContentLoaded', function () {
+            let addProjectBtn = document.getElementById('add-project-btn');
+            let projectsContainer = document.getElementById('projects-container');
+
+            addProjectBtn.addEventListener('click', function () {
+            let prototype = projectsContainer.dataset.prototype;
+            let index = projectsContainer.dataset.index;
+            let newForm = prototype.replace(/__name__/g, index);
+            projectsContainer.dataset.index = parseInt(index) + 1;
+            let newFormElement = document.createElement('div');
+            newFormElement.classList.add('project-form');
+            newFormElement.innerHTML = newForm;
+            projectsContainer.appendChild(newFormElement);
+            });
+
+            // Set initial data-prototype and index
+            let formPrototype = projectsContainer.getAttribute('data-prototype');
+            if (! projectsContainer.dataset.prototype) {
+            projectsContainer.dataset.prototype = formPrototype;
+            }
+            if (! projectsContainer.dataset.index) {
+            projectsContainer.dataset.index = {{ form.clockingProjects|length }};
+            }
+            });
+                    </script>
+        {% endblock %}
+	{{ form_end(form) }}
+{% endblock %}

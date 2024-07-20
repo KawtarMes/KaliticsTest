@@ -8,6 +8,7 @@ use App\Form\ClockingProjectType;
 use App\Form\ClockingType;
 use App\Repository\ClockingProjectRepository;
 use App\Repository\ClockingRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -21,33 +22,28 @@ class PointageController extends AbstractController
     public function createClocking(EntityManagerInterface $entityManager, Request $request): Response
     {
         $clocking = new Clocking();
+        // setting des valeurs connues automatique (user connecté et date du jour)
+        $clocking->setClockingUser($this->getUser());
+        $clocking->setDate(new DateTime('now'));
 
-    // Ajouter des ClockingProject à l'entité Clocking
-    for ($i = 0; $i < 3; $i++) {
-        $clockingProject = new ClockingProject();
-        $clocking->addClockingProject($clockingProject);
-    }
+        $form = $this->createForm(ClockingType::class, $clocking);
+        $form->handleRequest($request);
 
-    $form = $this->createForm(ClockingType::class, $clocking);
-    $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+        
+            $entityManager->persist($clocking);
+            $entityManager->flush();
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        // La relation bidirectionnelle doit être correctement configurée
-        foreach ($clocking->getClockingProjects() as $clockingProject) {
-            $clockingProject->setClocking($clocking);
+            // Redirection vers la liste des pointages
+            return $this->redirectToRoute('pointage_list');
+        } else {
+            dump($form->getErrors(true));
         }
-
-        // Persist l'entité Clocking (et ses ClockingProjects si cascade est configuré)
-        $entityManager->persist($clocking);
-        $entityManager->flush();
-
-        // Redirection vers la liste des pointages
-        return $this->redirectToRoute('pointage_list');
-    }
 
     // Rendu du formulaire
     return $this->render('pointage/new_pointage.html.twig', [
         'form' => $form->createView(),
+        'user' => $this->getUser()
     ]);
     }
 

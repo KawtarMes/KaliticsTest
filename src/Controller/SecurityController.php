@@ -52,7 +52,7 @@ class SecurityController extends AbstractController
             //message  flash
             $this->addFlash('success', 'Vous venez de vous inscrire! Verifiez votre email pour confirmer l\'inscription.');
             //redirection à la page de connexion
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
         return $this->render('security/signup.html.twig', [
             'form' => $form->createView(),

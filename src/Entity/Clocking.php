@@ -15,23 +15,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ClockingRepository::class)]
 class Clocking
 {
-
-    #[ORM\ManyToOne(inversedBy: 'clockings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Project           $clockingProject = null;
-    #[ORM\ManyToOne(inversedBy: 'clockings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User              $clockingUser    = null;
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?DateTimeInterface $date            = null;
-    #[Assert\Positive]
-    #[Assert\LessThanOrEqual(value: 10)]
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int               $duration        = null;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int               $id              = null;
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'clockings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Project $clockingProject = null;
+
+    #[ORM\ManyToOne(inversedBy: 'clockings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $clockingUser = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?DateTimeInterface $date = null;
 
     #[ORM\OneToMany(targetEntity: ClockingProject::class, mappedBy: 'clocking', cascade: ['persist'])]
     private Collection $clockingProjects;
@@ -73,16 +71,6 @@ class Clocking
     public function setDate(?DateTimeInterface $date): void
     {
         $this->date = $date;
-    }
-
-    public function getDuration(): ?int
-    {
-        return $this->duration;
-    }
-
-    public function setDuration(?int $duration): void
-    {
-        $this->duration = $duration;
     }
 
     public function getId(): ?int

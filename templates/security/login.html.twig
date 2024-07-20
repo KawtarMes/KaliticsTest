@@ -10,7 +10,7 @@
         </div>
     {% endif %}
 
-    <form action="{{ path('login') }}" method="post" class="mt-4">
+    <form action="{{ path('app_login') }}" method="post" class="mt-4">
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="text" id="email" name="email" value="{{ last_username }}" class="form-control" required autofocus>
